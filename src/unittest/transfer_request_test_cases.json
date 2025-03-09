@@ -1,3 +1,215 @@
 {
-
+  "valid": [
+    {
+      "id": "tc1",
+      "description": "All inputs correct – valid transfer request",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment xy",
+      "transfer_type": "ORDINARY",
+      "date": "01/01/2026",
+      "amount": "10.00",
+      "expected": "Transfer Code (MD5 hash generated)"
+    },
+    {
+      "id": "tc2",
+      "description": "All inputs correct – valid transfer request",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment xy",
+      "transfer_type": "URGENT",
+      "date": "02/02/2026",
+      "amount": "10.01",
+      "expected": "Transfer Code (MD5 hash generated)"
+    },
+    {
+      "id": "tc3",
+      "description": "All inputs correct – valid transfer request",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES9121000418450200051332",
+      "concept": "instant blo",
+      "transfer_type": "IMMEDIATE",
+      "date": "31/12/2051",
+      "amount": 9999.99,
+      "expected": "Transfer Code (MD5 hash generated)"
+    },
+    {
+      "id": "tc4",
+      "description": "All inputs correct – valid transfer request",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blo",
+      "transfer_type": "ORDINARY",
+      "date": "30/11/2050",
+      "amount": "10000.00",
+      "expected": "Transfer Code (MD5 hash generated)"
+    },
+    {
+      "id": "tc5",
+      "description": "All inputs correct – valid transfer request",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "hello world",
+      "transfer_type": "ORDINARY",
+      "date": "31/03/2025",
+      "amount": 100.00,
+      "expected": "Transfer Code (MD5 hash generated)"
+    },
+    {
+      "id": "tc6",
+      "description": "All inputs correct – valid transfer request",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment xy",
+      "transfer_type": "ORDINARY",
+      "date": "31/03/2025",
+      "amount": "100.00",
+      "expected": "Transfer Code (MD5 hash generated)"
+    }
+  ],
+  "invalid": [
+    {
+      "id": "tc7",
+      "description": "from_IBAN not in Spanish IBAN format",
+      "from_iban": "INVALIDIBAN",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment",
+      "transfer_type": "ORDINARY",
+      "date": "06/03/2025",
+      "amount": 100.00,
+      "expected": "AccountManagementException (\"Not valid IBANS\")"
+    },
+    {
+      "id": "tc8",
+      "description": "to_IBAN not in valid format",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ABC123",
+      "concept": "instant blockchain payment",
+      "transfer_type": "ORDINARY",
+      "date": "06/03/2025",
+      "amount": 100.00,
+      "expected": "AccountManagementException (\"Not valid IBANS\")"
+    },
+    {
+      "id": "tc9",
+      "description": "Concept contains only one word",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "payment",
+      "transfer_type": "ORDINARY",
+      "date": "06/03/2025",
+      "amount": 100.00,
+      "expected": "AccountManagementException (\"Concept is not valid\")"
+    },
+    {
+      "id": "tc10",
+      "description": "Concept length is 10 characters (below minimum length)",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "hello wor",
+      "transfer_type": "ORDINARY",
+      "date": "31/03/2025",
+      "amount": 100.00,
+      "expected": "AccountManagementException (\"Concept is not valid\")"
+    },
+    {
+      "id": "tc11",
+      "description": "Concept length is 30 characters (exceeds maximum allowed length)",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment xyza",
+      "transfer_type": "ORDINARY",
+      "date": "06/03/2025",
+      "amount": 100.00,
+      "expected": "AccountManagementException (\"Concept is not valid\")"
+    },
+    {
+      "id": "tc12",
+      "description": "Transfer type is not one of the allowed values",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment",
+      "transfer_type": "HELLOWORLD",
+      "date": "06/03/2025",
+      "amount": 100.00,
+      "expected": "AccountManagementException (\"Transfer type is not valid\")"
+    },
+    {
+      "id": "tc13",
+      "description": "Date not in DD/MM/YYYY format",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment",
+      "transfer_type": "ORDINARY",
+      "date": "2025-03-06",
+      "amount": 100.00,
+      "expected": "AccountManagementException (\"Transfer date is not valid\")"
+    },
+    {
+      "id": "tc14",
+      "description": "Date components out of range (day, month, year)",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment",
+      "transfer_type": "ORDINARY",
+      "date": "32/13/2052",
+      "amount": "100.00",
+      "expected": "AccountManagementException (\"Transfer date is not valid\")"
+    },
+    {
+      "id": "tc15",
+      "description": "Date is before the current date",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment",
+      "transfer_type": "ORDINARY",
+      "date": "28/02/2025",
+      "amount": 100.00,
+      "expected": "AccountManagementException (\"Transfer date is not valid\")"
+    },
+    {
+      "id": "tc16",
+      "description": "Amount is not a float (non-numeric value) and date is out of range (under)",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment",
+      "transfer_type": "ORDINARY",
+      "date": "00/00/2024",
+      "amount": "HELLO",
+      "expected": "AccountManagementException (\"Amount is not valid\")"
+    },
+    {
+      "id": "tc17",
+      "description": "Amount has more than 2 decimal places",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment",
+      "transfer_type": "ORDINARY",
+      "date": "31/03/2025",
+      "amount": "12.101.010",
+      "expected": "AccountManagementException (\"Amount is not valid\")"
+    },
+    {
+      "id": "tc18",
+      "description": "Amount below the minimum allowed value (<10.00)",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment",
+      "transfer_type": "ORDINARY",
+      "date": "06/03/2026",
+      "amount": 9.99,
+      "expected": "AccountManagementException (\"Amount is not valid\")"
+    },
+    {
+      "id": "tc19",
+      "description": "Amount above the maximum allowed value (>10,000.00)",
+      "from_iban": "ES9121000418450200051332",
+      "to_iban": "ES7921000813610123456789",
+      "concept": "instant blockchain payment",
+      "transfer_type": "ORDINARY",
+      "date": "06/03/2026",
+      "amount": 10000.01,
+      "expected": "AccountManagementException (\"Amount is not valid\")"
+    }
+  ]
 }
