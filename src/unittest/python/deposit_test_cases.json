@@ -1,0 +1,140 @@
+{
+  "valid": [
+    {
+      "id": "dc1",
+      "description": "Valid deposit request",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "EUR 500.00",
+      "expected": "SHA-256 hash"
+    },
+    {
+      "id": "dc2",
+      "description": "Valid deposit request",
+      "to_iban": "ES9121000418450200051332",
+      "amount": "EUR 100.00",
+      "expected": "SHA-256 hash"
+    },
+    {
+      "id": "dc6",
+      "description": "Valid deposit with minimum amount",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "EUR 10.00",
+      "expected": "SHA-256 hash"
+    },
+    {
+      "id": "dc7",
+      "description": "Valid deposit with maximum amount",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "EUR 10000.00",
+      "expected": "SHA-256 hash"
+    },
+    {
+      "id": "dc8",
+      "description": "Valid deposit with large amount but within limit",
+      "to_iban": "ES9121000418450200051332",
+      "amount": "EUR 9999.99",
+      "expected": "SHA-256 hash"
+    }
+  ],
+  "invalid": [
+
+    {
+      "id": "dc4",
+      "description": "Amount in wrong format",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "500 USD",
+      "expected": "AccountManagementException (Invalid currency format)"
+    },
+    {
+      "id": "dc5",
+      "description": "Amount below minimum",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "EUR 5.00",
+      "expected": "AccountManagementException (Amount must be >= 10.00)"
+    },
+    {
+      "id": "dc9",
+      "description": "Amount exceeds maximum allowed",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "EUR 10000.01",
+      "expected": "AccountManagementException (Amount must be <= 10000.00)"
+    },
+    {
+      "id": "dc10",
+      "description": "Negative deposit amount",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "EUR -50.00",
+      "expected": "AccountManagementException (Amount must be positive)"
+    },
+    {
+      "id": "dc11",
+      "description": "Amount missing currency",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "500.00",
+      "expected": "AccountManagementException (Invalid currency format)"
+    },
+    {
+      "id": "dc12",
+      "description": "Amount with more than two decimal places",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "EUR 100.123",
+      "expected": "AccountManagementException (Amount format invalid, must have two decimal places)"
+    },
+    {
+      "id": "dc13",
+      "description": "Empty IBAN field",
+      "to_iban": "",
+      "amount": "EUR 100.00",
+      "expected": "AccountManagementException (Invalid IBAN)"
+    },
+    {
+      "id": "dc14",
+      "description": "IBAN too short",
+      "to_iban": "ES79",
+      "amount": "EUR 500.00",
+      "expected": "AccountManagementException (Invalid IBAN format)"
+    },
+    {
+      "id": "dc15",
+      "description": "IBAN too long",
+      "to_iban": "ES79210008136101234567891234567890123456789",
+      "amount": "EUR 500.00",
+      "expected": "AccountManagementException (Invalid IBAN format)"
+    },
+    {
+      "id": "dc16",
+      "description": "IBAN contains invalid characters",
+      "to_iban": "ES79ABC0813610123456789",
+      "amount": "EUR 500.00",
+      "expected": "AccountManagementException (Invalid IBAN format)"
+    },
+    {
+      "id": "dc17",
+      "description": "IBAN is correct but contains leading/trailing spaces",
+      "to_iban": "  ES7921000813610123456789  ",
+      "amount": "EUR 500.00",
+      "expected": "AccountManagementException (Invalid IBAN format - contains spaces)"
+    },
+    {
+      "id": "dc18",
+      "description": "Amount is not a number",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "EUR fifty",
+      "expected": "AccountManagementException (Invalid amount format)"
+    },
+    {
+      "id": "dc19",
+      "description": "Amount is zero",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "EUR 0.00",
+      "expected": "AccountManagementException (Amount must be positive)"
+    },
+    {
+      "id": "dc20",
+      "description": "Amount contains commas instead of decimal points",
+      "to_iban": "ES7921000813610123456789",
+      "amount": "EUR 100,00",
+      "expected": "AccountManagementException (Invalid amount format)"
+    }
+  ]
+}

@@ -205,7 +205,7 @@ def process_transfer(from_iban: str, to_iban: str, concept: str,
     except ValueError:
         raise AccountManagementException("Amount is not valid")
 
-    # Check that the amount is within the valid range (10.00 to 10000.00)
+    # Check that the amount is within the valid range (10.00 to 10000.00
     if not (10.00 <= float_amount <= 10000.00):
         raise AccountManagementException("Amount is not valid")
 
