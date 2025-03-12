@@ -37,10 +37,9 @@
     }
   ],
   "invalid": [
-
     {
       "id": "dc4",
-      "description": "Amount in wrong format",
+      "description": "Amount in wrong format (USD instead of EUR)",
       "to_iban": "ES7921000813610123456789",
       "amount": "500 USD",
       "expected": "AccountManagementException (Invalid currency format)"
