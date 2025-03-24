@@ -10,7 +10,3 @@ class AccountManagementException(Exception):
     def message(self):
         """gets the message value"""
         return self.__message
-
-    @message.setter
-    def message(self,value):
-        self.__message = value

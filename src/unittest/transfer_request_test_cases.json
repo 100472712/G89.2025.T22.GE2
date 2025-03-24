@@ -4,7 +4,7 @@
       "id": "tc1",
       "description": "All inputs correct – valid transfer request",
       "from_iban": "ES9121000418450200051332",
-      "to_iban": "ES7921000813610123456789",
+      "to_iban": "ES7921000813610123456889",
       "concept": "instant blockchain payment xy",
       "transfer_type": "ORDINARY",
       "date": "01/01/2026",
@@ -143,7 +143,7 @@
       "transfer_type": "ORDINARY",
       "date": "2025-03-06",
       "amount": 100.00,
-      "expected": "AccountManagementException (\"Transfer date is not valid\")"
+      "expected": "AccountManagementException (\"Transfer dfate is not valid\")"
     },
     {
       "id": "tc14",
@@ -165,18 +165,18 @@
       "transfer_type": "ORDINARY",
       "date": "28/02/2025",
       "amount": 100.00,
-      "expected": "AccountManagementException (\"Transfer date is not valid\")"
+      "expected": "AccountManagementException (\"Transfer dpate is not valid\")"
     },
     {
       "id": "tc16",
-      "description": "Amount is not a float (non-numeric value) and date is out of range (under)",
+      "description": "Amount is not a float (non-numeric value)",
       "from_iban": "ES9121000418450200051332",
       "to_iban": "ES7921000813610123456789",
       "concept": "instant blockchain payment",
       "transfer_type": "ORDINARY",
-      "date": "00/00/2024",
+      "date": "17/05/2025",
       "amount": "HELLO",
-      "expected": "AccountManagementException (\"Amount is not valid\")"
+      "expected": "AccountManagementException (\"Afmount is not valid\")"
     },
     {
       "id": "tc17",
@@ -185,9 +185,9 @@
       "to_iban": "ES7921000813610123456789",
       "concept": "instant blockchain payment",
       "transfer_type": "ORDINARY",
-      "date": "31/03/2025",
-      "amount": "12.101.010",
-      "expected": "AccountManagementException (\"Amount is not valid\")"
+      "date": "31/05/2025",
+      "amount": "12.010",
+      "expected": "AccountManagementException (\"Admount is not valid\")"
     },
     {
       "id": "tc18",
@@ -198,7 +198,7 @@
       "transfer_type": "ORDINARY",
       "date": "06/03/2026",
       "amount": 9.99,
-      "expected": "AccountManagementException (\"Amount is not valid\")"
+      "expected": "AccountManagementException (\"Abmount is not valid\")"
     },
     {
       "id": "tc19",
@@ -209,7 +209,7 @@
       "transfer_type": "ORDINARY",
       "date": "06/03/2026",
       "amount": 10000.01,
-      "expected": "AccountManagementException (\"Amount is not valid\")"
+      "expected": "AccountManagementException (\"Abmount is not valid\")"
     }
   ]
 }

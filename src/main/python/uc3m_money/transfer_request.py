@@ -108,7 +108,7 @@ class TransferRequest:
         """Returns the MD5 signature (transfer code)"""
         return hashlib.md5(str(self).encode()).hexdigest()
 
-def valid_iban(iban: str, check_spanish: bool = True) -> bool:
+def valid_iban(iban: str) -> bool:
     """
     Validate IBAN format.
     When check_spanish is True, enforce Spanish IBAN rules:
@@ -119,9 +119,8 @@ def valid_iban(iban: str, check_spanish: bool = True) -> bool:
       - At least 15 characters and at most 34
       - Must be alphanumeric
     """
-    if check_spanish:
-        return iban.startswith("ES") and (len(iban) == 24) and iban[2:].isdigit()
-    return 15 <= len(iban) <= 34 and iban.isalnum()
+
+    return iban.startswith("ES") and (len(iban) == 24) and iban[2:].isdigit()
 
 # pylint: disable=too-many-arguments,too-many-branches,too-many-locals,too-many-positional-arguments, too-many-statements
 def process_transfer(from_iban: str, to_iban: str, concept: str,
@@ -135,7 +134,7 @@ def process_transfer(from_iban: str, to_iban: str, concept: str,
       - Date: must be in DD/MM/YYYY format, be a valid date,
       have DD between 01 and 31, MM between 01 and 12,
         and year between 2025 and 2050, and not be before the current date.
-      - Amount: must be a numeric value (allowing commas as thousand separators)
+      - Amount: must be a numeric value (allowing commas as separators)
        with exactly 2 decimals,
                 and between 10.00 and 10,000.00 (inclusive).
       - The transfer must not be a duplicate (based on its transfer code) in the stored JSON file.
@@ -143,23 +142,18 @@ def process_transfer(from_iban: str, to_iban: str, concept: str,
     On success, the transfer is saved and a string containing the transfer code is returned.
     """
     # Validate sender IBAN (always require Spanish IBAN format)
-    if not valid_iban(from_iban, check_spanish=True):
+    if not valid_iban(from_iban):
         raise AccountManagementException("Not valid IBANS")
 
     # Validate receiver IBAN:
-    # For IMMEDIATE transfers, allow any non-empty string.
-    # Otherwise, enforce Spanish IBAN format.
-    if transfer_type != "IMMEDIATE":
-        if not valid_iban(to_iban, check_spanish=True):
-            raise AccountManagementException("Not valid IBANS")
-    else:
-        if not isinstance(to_iban, str) or not to_iban.strip():
-            raise AccountManagementException("Not valid IBANS")
+
+    if not valid_iban(to_iban):
+        raise AccountManagementException("Not valid IBANS")
 
     # Validate concept:
     # Must contain at least two words and be between 10 and 30 characters.
     words = concept.split()
-    if len(words) < 2 or not (10 <= len(concept) <= 30):
+    if len(words) < 2 or not 10 <= len(concept) <= 30:
         raise AccountManagementException("Concept is not valid")
 
     # Validate transfer type:
@@ -172,11 +166,8 @@ def process_transfer(from_iban: str, to_iban: str, concept: str,
         date_obj = datetime.strptime(date, "%d/%m/%Y")
     except ValueError as exc:
         raise AccountManagementException("Transfer date is not valid") from exc
-    day, month, year = int(date[:2]), int(date[3:5]), int(date[6:])
-    if not (1 <= day <= 31 and 1 <= month <= 12 and 2025 <= year <= 2051):
-        raise AccountManagementException("Transfer date is not valid")
     if date_obj.date() < datetime.now().date():
-        raise AccountManagementException("Transfer date is not valid")
+        raise AccountManagementException("Transfer date is in the past")
 
     # Validate amount:
     # Normalize the amount if it's a float
@@ -199,14 +190,11 @@ def process_transfer(from_iban: str, to_iban: str, concept: str,
     if not (integer_part.isdigit() and decimal_part.isdigit() and len(decimal_part) == 2):
         raise AccountManagementException("Amount is not valid")
 
-    # Convert the normalized amount to float and check its validity
-    try:
-        float_amount = float(normalized_amount)
-    except ValueError:
-        raise AccountManagementException("Amount is not valid")
+    # Convert the normalized amount to float
+    float_amount = float(normalized_amount)
 
     # Check that the amount is within the valid range (10.00 to 10000.00
-    if not (10.00 <= float_amount <= 10000.00):
+    if not 10.00 <= float_amount <= 10000.00:
         raise AccountManagementException("Amount is not valid")
 
     transfer = TransferRequest(from_iban, transfer_type, to_iban, concept, date, float_amount)
@@ -226,7 +214,7 @@ def process_transfer(from_iban: str, to_iban: str, concept: str,
         transactions = []
 
     for t in transactions:
-        if t.get("transfer_code") == transfer.transfer_code:
+        if t["transfer_code"] == transfer.transfer_code:
             raise AccountManagementException("Output JSON file already has that transfer")
 
     with open(json_path, 'w', encoding='utf-8') as f:

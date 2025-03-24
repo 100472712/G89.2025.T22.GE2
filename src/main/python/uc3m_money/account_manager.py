@@ -1,4 +1,6 @@
-class AccountManager:
+"""Here we create the module to handle the account manager"""
+class AccountManager:# pylint: disable=too-few-public-methods
+    """Here we define our class for later use"""
     @staticmethod
     def validate_iban(iban: str) -> bool:
         """
@@ -13,7 +15,8 @@ class AccountManager:
         Returns:
             bool: Returns True if the IBAN is valid, False otherwise.
         """
-        # Check if the IBAN starts with 'ES', is 24 characters long, and contains only digits after 'ES'.
+        # Check if the IBAN starts with 'ES', is 24
+        # characters long, and contains only digits after 'ES'.
         if iban.startswith("ES") and len(iban) == 24 and iban[2:].isdigit():
             return True
         return False

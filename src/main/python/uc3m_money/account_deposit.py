@@ -1,8 +1,13 @@
+"""This module enacts function 2 dealing with account deposits"""
 import json
 import os
 
 import hashlib
 from datetime import datetime, timezone
+# pylint: disable=import-error
+from uc3m_money.account_manager import AccountManager
+from uc3m_money.account_management_exception import AccountManagementException
+
 
 class AccountDeposit:
     """Class representing a deposit request."""
@@ -15,8 +20,8 @@ class AccountDeposit:
         # Then validate the deposit amount format
         try:
             deposit_amount = float(deposit_amount)
-        except ValueError:
-            raise AccountManagementException("Invalid amount format")
+        except ValueError as exc:
+            raise AccountManagementException("Invalid amount format") from exc
 
         # Validate the deposit amount range
         if deposit_amount <= 0:
@@ -63,13 +68,6 @@ class AccountDeposit:
         """Returns the sha256 signature of the deposit details"""
         return hashlib.sha256(self.__signature_string().encode()).hexdigest()
 
-
-
-
-from src.main.python.uc3m_money.account_manager import AccountManager
-from src.main.python.uc3m_money.account_deposit import AccountDeposit
-from src.main.python.uc3m_money.account_management_exception import AccountManagementException
-
 def deposit_into_account(input_file: str) -> str:
     """
     Reads a JSON file, validates the IBAN and amount,
@@ -93,8 +91,8 @@ def deposit_into_account(input_file: str) -> str:
     try:
         with open(input_file, 'r', encoding='utf-8') as f:
             data = json.load(f)
-    except json.JSONDecodeError:
-        raise AccountManagementException("The file is not in JSON format.")
+    except json.JSONDecodeError as exc:
+        raise AccountManagementException("The file is not in JSON format.") from exc
 
     # Step 3: Validate JSON structure
     if not isinstance(data, dict) or "IBAN" not in data or "AMOUNT" not in data:
@@ -113,10 +111,8 @@ def deposit_into_account(input_file: str) -> str:
 
     try:
         amount = float(amount_str.split("EUR ")[1])
-
-
-    except ValueError:
-        raise AccountManagementException("Invalid amount format.")
+    except ValueError as exc:
+        raise AccountManagementException("Invalid amount format") from exc
 
     if amount > 10000.00:
         raise AccountManagementException("Amount must be <= 10000.00")
@@ -129,7 +125,7 @@ def deposit_into_account(input_file: str) -> str:
 
     # Step 7: Save the deposit data to a JSON file
     base_dir = os.path.dirname(__file__)
-    deposit_json_path = os.path.join(base_dir, "deposits.json")
+    deposit_json_path = os.path.join(base_dir,"..", "..", "deposits.json")
 
     # Load existing deposits
     if os.path.exists(deposit_json_path):
@@ -148,7 +144,6 @@ def deposit_into_account(input_file: str) -> str:
 
     # Write back to the JSON file
     with open(deposit_json_path, 'w', encoding='utf-8') as f:
-        json.dump(deposits, f, indent=4)
+        json.dump(deposits, f, indent=4) #type: ignore
 
     return deposit.deposit_signature
-
